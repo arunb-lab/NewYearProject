@@ -13,5 +13,5 @@ height = 5.9  # float variable
 # 4: Python's reserved keywords cannont be use as a variable name. example : print, if, class, def
 # 5: You should use descriptive names for variables. 
 # Example:
- user_age = 25
- user_name = "Arun Baral"
+user_age = 25
+user_name = "Arun Baral"
