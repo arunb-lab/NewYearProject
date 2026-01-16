@@ -46,3 +46,65 @@ if __name__ == "__main__":
     print(f"Original: {original}")
     print(f"Encrypted (shift {shift_value}): {enc}")
     print(f"Decrypted: {dec}")
+
+import heapq
+class Graph:
+    def __init__(self):
+        self.graph = {}
+    
+    def add_edge(self, u, v, weight):
+        """Add an edge to the graph"""
+        if u not in self.graph:
+            self.graph[u] = []
+        if v not in self.graph:
+            self.graph[v] = []
+        
+        self.graph[u].append((v, weight))
+        self.graph[v].append((u, weight))  # For undirected graph
+    
+    def dijkstra(self, start, end):
+        """Find the shortest path from start to end using Dijkstra's algorithm"""
+        pq = [(0, start, [start])]  # (distance, current_node, path)
+        visited = set()
+        distances = {start: 0}
+        
+        while pq:
+            curr_dist, curr_node, path = heapq.heappop(pq)
+            
+            if curr_node in visited:
+                continue
+            visited.add(curr_node)
+            if curr_node == end:
+                return curr_dist, path
+            for neighbor, weight in self.graph.get(curr_node, []):
+                if neighbor not in visited:
+                    new_dist = curr_dist + weight
+                    if neighbor not in distances or new_dist < distances[neighbor]:
+                        distances[neighbor] = new_dist
+                        heapq.heappush(pq, (new_dist, neighbor, path + [neighbor]))
+        return float('inf'), []
+    def print_graph(self):
+        """Print the graph structure"""
+        print("\nGraph Structure:")
+        for node in sorted(self.graph.keys()):
+            print(f"{node}: {self.graph[node]}")
+    g.add_edge('A', 'B', 1)
+    g.add_edge('A', 'D', 7)
+    g.add_edge('B', 'C', 3)
+    g.add_edge('C', 'D', 1)
+    g.add_edge('C', 'E', 2)
+    g.add_edge('D', 'E', 6)
+    g.print_graph()
+    # Find shortest path from A to E
+    distance, path = g.dijkstra('A', 'E')
+    print(f"\nShortest path from A to E: Distance = {distance}, Path =
+    {path}")
+    g.add_edge('D', 'E', 2)
+    g.print_graph()
+    g.add_edge('E', 'F', 3)
+    g.print_graph()
+        """Display the graph structure"""
+        print("\nGraph Structure:")
+        for node in sorted(self.graph.keys()):
+            print(f"{node}: {self.graph[node]}")f"{node}: {self.graph[node]}")
+            
