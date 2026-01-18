@@ -14,3 +14,12 @@ bike.append('BMW')
 bike.append('Royal Enfield')
 
 print(bike)
+
+
+# ----------------Insert-----------------
+motorcycle.insert(0, 'Ducati Panigale V4')
+print(motorcycle)
+
+# ---------------Remove----------------
+del motorcycle[1]
+print(motorcycle)
