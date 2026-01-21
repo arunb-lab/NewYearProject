@@ -97,8 +97,7 @@ class Graph:
     g.print_graph()
     # Find shortest path from A to E
     distance, path = g.dijkstra('A', 'E')
-    print(f"\nShortest path from A to E: Distance = {distance}, Path =
-    {path}")
+    print(f"\nShortest path from A to E: Distance = {distance}, Path = {path}")
     g.add_edge('D', 'E', 2)
     g.print_graph()
     g.add_edge('E', 'F', 3)
