@@ -2,16 +2,31 @@
 
 Usage:
   python -m streak_cli
+
+Data file:
+  By default, uses ./data.json at the repo root.
+  Override with env var STREAK_CLI_DATA=/path/to/data.json
 """
 
 from __future__ import annotations
 
 import json
+import os
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 
-DATA_PATH = Path(__file__).resolve().parent.parent / "data.json"
+
+def _default_data_path() -> Path:
+    return Path(__file__).resolve().parent.parent / "data.json"
+
+
+def data_path() -> Path:
+    """Return the path used for persistence."""
+    raw = os.environ.get("STREAK_CLI_DATA")
+    if raw:
+        return Path(raw).expanduser()
+    return _default_data_path()
 
 
 @dataclass
@@ -21,21 +36,30 @@ class Note:
 
 
 def _load() -> list[dict]:
-    if not DATA_PATH.exists():
+    path = data_path()
+    if not path.exists():
         return []
     try:
-        return json.loads(DATA_PATH.read_text(encoding="utf-8"))
+        return json.loads(path.read_text(encoding="utf-8"))
     except Exception:
         return []
 
 
 def _save(items: list[dict]) -> None:
-    DATA_PATH.write_text(json.dumps(items, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    path = data_path()
+    path.write_text(
+        json.dumps(items, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
 
 
 def add_note(text: str) -> None:
+    clean = text.strip()
+    if not clean:
+        raise ValueError("note text must be non-empty")
+
     items = _load()
-    items.append({"ts": datetime.now().isoformat(timespec="seconds"), "text": text.strip()})
+    items.append({"ts": datetime.now().isoformat(timespec="seconds"), "text": clean})
     _save(items)
 
 
@@ -47,6 +71,7 @@ def list_notes(limit: int = 20) -> list[Note]:
 
 def main() -> int:
     print("streak_cli — quick notes for 2026 streak")
+    print(f"data: {data_path()}")
     print("1) Add note")
     print("2) List notes")
     choice = input("> ").strip()
