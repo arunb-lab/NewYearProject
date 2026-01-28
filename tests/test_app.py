@@ -1,4 +1,5 @@
 import json
+import os
 import tempfile
 import unittest
 from pathlib import Path
@@ -10,10 +11,10 @@ class TestStreakCli(unittest.TestCase):
     def setUp(self):
         self._tmpdir = tempfile.TemporaryDirectory()
         self.data_path = Path(self._tmpdir.name) / "data.json"
-        # Patch the module-level path so tests don't touch repo files
-        app.DATA_PATH = self.data_path
+        os.environ["STREAK_CLI_DATA"] = str(self.data_path)
 
     def tearDown(self):
+        os.environ.pop("STREAK_CLI_DATA", None)
         self._tmpdir.cleanup()
 
     def test_add_note_creates_file(self):
@@ -32,6 +33,10 @@ class TestStreakCli(unittest.TestCase):
         self.assertEqual(len(notes), 5)
         self.assertEqual(notes[0].text, "n25")
         self.assertEqual(notes[-1].text, "n29")
+
+    def test_add_note_rejects_empty(self):
+        with self.assertRaises(ValueError):
+            app.add_note("   ")
 
 
 if __name__ == "__main__":
