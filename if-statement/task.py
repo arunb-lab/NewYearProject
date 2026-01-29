@@ -5,5 +5,8 @@ if username:
             print("Hii, " + user +" Would you like to see a status report ??" )
         else:
             print("Hii, " + user + "! Thanks for logging in again.")
+
+else:
+    print("We need to find some users first")
 print()
 print("Thank you for using our software! ")
